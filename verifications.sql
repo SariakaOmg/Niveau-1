@@ -34,3 +34,21 @@ SELECT Commande.id_Commande ,Commande.dates,Client_Commande.id_Client,Client.Nom
 -- piege 
 -- la cle etrangere id_Commande est NOT NULL
 -- mais le id_Client n'est pas NOT NULL
+
+-- Etape 5
+-- Nombre de Commande  par serveur
+SELECT Serveur.Nom, Serveur.Prenom,count(*)  FROM Serveur_Commande_Table RIGHT JOIN Serveur ON Serveur.id_Serveur =  Serveur_Commande_Table.id_Serveur GROUP BY Serveur.id_Serveur;
+-- Chiffre d'affaire par serveur
+SELECT 
+    Serveur.Nom, 
+    Serveur.Prenom, 
+    SUM(Plat_Carte.Prix_Plat_Ar) AS nombre_plats_pris
+FROM Serveur_Commande_Table
+RIGHT JOIN Serveur ON Serveur.id_Serveur = Serveur_Commande_Table.id_Serveur
+LEFT JOIN Commande_Plat ON Commande_Plat.id_Commande = Serveur_Commande_Table.id_Commande
+LEFT JOIN Plat_Carte ON Plat_Carte.id_Plat = Commande_Plat.id_Plat_Carte 
+GROUP BY Serveur.id_Serveur, Serveur.Nom, Serveur.Prenom;
+
+-- Piege
+-- Une table de la salle et une commande sont deux choses différentes : parce qu une commande ne veut pas dire une table : une table peut correspondre a plusieur commande et plusisuer commande peut correspondre a une table 
+-- Pourquoi le nom table pose-t-il problème en SQL : Le mot TABLE est un mot-réservé (keyword) fondamental du langage SQL (utilisé pour créer des tables : CREATE TABLE, modifier des tables, etc.).

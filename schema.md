@@ -23,3 +23,15 @@ Etape 1 :
     Table Client:
         id_Client
         Nom
+    Table Serveur :
+        id_Serveur
+        Nom
+        Prenom
+    Table Serveur_Commande_Table :
+        id_Serveur_Commande_Table
+        id_Serveur
+        id_Table
+        id_Commande
+    Table Tables_g:
+        id_table_g
+        Numero
