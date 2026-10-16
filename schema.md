@@ -35,3 +35,11 @@ Etape 1 :
     Table Tables_g:
         id_table_g
         Numero
+    Table Paiement:
+        id_paiement
+        id_Commande
+        id_Mode_paiement
+        Montant
+    Table Mode_paiement:
+        id_Mode_paiement
+        Libelle

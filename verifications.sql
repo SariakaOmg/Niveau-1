@@ -52,3 +52,38 @@ GROUP BY Serveur.id_Serveur, Serveur.Nom, Serveur.Prenom;
 -- Piege
 -- Une table de la salle et une commande sont deux choses différentes : parce qu une commande ne veut pas dire une table : une table peut correspondre a plusieur commande et plusisuer commande peut correspondre a une table 
 -- Pourquoi le nom table pose-t-il problème en SQL : Le mot TABLE est un mot-réservé (keyword) fondamental du langage SQL (utilisé pour créer des tables : CREATE TABLE, modifier des tables, etc.).
+
+-- Etape 6
+-- Verification
+-- liste des commandes non soldées avec le montant dû, le montant payé et le reste à payer
+WITH MontantDu AS (
+    -- 1. Calcul du total des plats commandés pour chaque commande
+    SELECT 
+        cp.id_Commande,
+        SUM(cp.Quantite * ca.Prix) AS montant_du
+    FROM Commande_Plat cp
+    JOIN Carte ca ON cp.id_Plat_Carte = ca.Id_Plat
+    GROUP BY cp.id_Commande
+),
+MontantPaye AS (
+    -- 2. Récupération du montant déjà payé par commande
+    SELECT 
+        id_Commande,
+        SUM(Montant) AS montant_payer
+    FROM Paiement
+    GROUP BY id_Commande
+)
+-- 3. Assemblage final et calcul du reste
+SELECT 
+    c.id_Commande,
+    c.dates AS date_commande,
+    COALESCE(md.montant_du, 0) AS montant_du,
+    COALESCE(mp.montant_payer, 0) AS montant_payer,
+    (COALESCE(md.montant_du, 0) - COALESCE(mp.montant_payer, 0)) AS reste
+FROM Commande c
+LEFT JOIN MontantDu md ON c.id_Commande = md.id_Commande
+LEFT JOIN MontantPaye mp ON c.id_Commande = mp.id_Commande;
+
+-- piege
+-- Pourquoi une colonne montant_paye dans la table des commandes ne suffit-elle pas ?
+-- -> parce qu une commande peut y avoir plusieurs paiement
