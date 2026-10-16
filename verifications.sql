@@ -27,3 +27,10 @@ RIGHT JOIN Commande ON Commande.id_Commande = Commande_Plat.id_Commande
 GROUP BY Commande.id_Commande, Commande.dates;
 -- piege
 -- j ai mis dans Commande_Plat la quantite car 
+
+-- Etape 4:
+SELECT Commande.id_Commande ,Commande.dates,Client_Commande.id_Client,Client.Nom , CASE WHEN Client_Commande.id_Client IS NULL THEN 'Client de passage' END AS "Titre client" FROM Commande LEFT JOIN Client_Commande ON Commande.id_Commande = Client_Commande.id_Commande LEFT JOIN Client ON Client.id_Client = Client_Commande.id_Client;
+
+-- piege 
+-- la cle etrangere id_Commande est NOT NULL
+-- mais le id_Client n'est pas NOT NULL

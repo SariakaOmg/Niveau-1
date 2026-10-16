@@ -16,3 +16,10 @@ Etape 1 :
         id_Plat_Carte
         id_Commande
         Quantite
+    Table Client_Commande :
+        id_Client_Commande
+        id_Commande
+        id_Client
+    Table Client:
+        id_Client
+        Nom
