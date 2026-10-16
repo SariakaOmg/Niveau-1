@@ -17,3 +17,13 @@ SELECT  Categorie_plat.nom_categorie , COUNT(*) as nombrePlat FROM Plat_Carte RI
 -- Inconvénient d'utiliser un simple VARCHAR pour la catégorie :
 -- Si une faute de frappe ou une variation se glisse (ex: "plat malagasy" au lieu de "plats malagasy"),
 -- le système les considérera comme deux catégories totalement différentes.
+
+-- Etape 3 :
+-- montant total de chaque commande
+SELECT Commande.dates, SUM(Plat_Carte.Prix_Plat_Ar) 
+FROM Plat_Carte 
+RIGHT JOIN Commande_Plat ON Plat_Carte.id_Plat = Commande_Plat.id_Plat_Carte 
+RIGHT JOIN Commande ON Commande.id_Commande = Commande_Plat.id_Commande 
+GROUP BY Commande.id_Commande, Commande.dates;
+-- piege
+-- j ai mis dans Commande_Plat la quantite car 

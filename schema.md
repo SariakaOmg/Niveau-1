@@ -8,3 +8,11 @@ Etape 1 :
     Table Categorie_plat :
         id_Categorie
         nom_categorie
+    Table Commande :
+        id_Commande
+        dates
+    Table Commande_Plat:
+        id_Commande_Plat
+        id_Plat_Carte
+        id_Commande
+        Quantite
