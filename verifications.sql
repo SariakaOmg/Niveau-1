@@ -95,3 +95,39 @@ WHERE reste != 0;
 -- Pourquoi une colonne montant_paye dans la table des commandes ne suffit-elle pas ?
 -- -> parce qu une commande peut y avoir plusieurs paiement
 
+-- Etape 7
+WITH CommandeAvecPrixReel AS (
+    SELECT 
+        c.id_Commande,
+        c.dates,
+        cp.Quantite,
+        -- On cherche le prix dans 'augmentation' à la date de la commande, sinon on prend le prix de base
+        COALESCE(
+            (
+                SELECT a.Montant
+                FROM augmentation a
+                WHERE a.id_Plat = cp.id_Plat_Carte 
+                  AND a.Dates <= c.dates
+                ORDER BY a.Dates DESC
+                LIMIT 1
+            ), 
+            ca.Prix_Plat_Ar
+        ) AS prix_unitaire_reel
+    FROM Commande c
+    JOIN Commande_Plat cp ON c.id_Commande = cp.id_Commande
+    JOIN Plat_Carte ca ON cp.id_Plat_Carte = ca.id_Plat
+)
+-- Calcul du total par commande
+SELECT 
+    id_Commande,
+    dates AS date_commande,
+    SUM(prix_unitaire_reel * Quantite) AS total_commande_ariary
+FROM CommandeAvecPrixReel
+GROUP BY id_Commande, dates;
+
+-- Corrigez le schéma pour que le montant d'une commande ne change plus
+-- jamais.
+
+ALTER TABLE Commande_Plat ADD COLUMN prix_unitaire NUMERIC;
+
+

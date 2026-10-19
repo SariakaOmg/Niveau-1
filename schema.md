@@ -11,11 +11,12 @@ Etape 1 :
     Table Commande :
         id_Commande
         dates
-    Table Commande_Plat:
+    Table Commande_Plat:(modifie)
         id_Commande_Plat
         id_Plat_Carte
         id_Commande
         Quantite
+        prix unitaire
     Table Client_Commande :
         id_Client_Commande
         id_Commande
@@ -44,3 +45,8 @@ Etape 1 :
     Table Mode_paiement:
         id_Mode_paiement
         Libelle
+    Table augmentation :
+        id_augmentation
+        Montant
+        Dates
+        id_Plat
