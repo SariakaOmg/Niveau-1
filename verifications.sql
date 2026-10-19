@@ -157,3 +157,14 @@ SELECT Ingredient.libelle , Qte_par_Ingred.C_t FROM Ingredient JOIN Qte_par_Ingr
 
 -- piege
 -- parce que risque de faute de frappe peut faussee les donnee 
+
+-- Etape 9
+WITH Prix_Carte AS (
+    SELECT Menu_Plat.id_Menu, SUM(Menu_Plat.quantite*Commande_Plat.prix_unitaire) as price FROM Menu_Plat JOIN Commande_Plat ON Menu_Plat.id_Plat = Commande_Plat.id_Plat_Carte GROUP BY Menu_Plat.id_Menu
+),
+Economie_client AS (
+    SELECT Menu.id_Menu,(Prix_Carte.price - Menu.prix) AS economie FROM Prix_Carte JOIN Menu ON Prix_Carte.id_Menu = Menu.id_Menu
+)
+SELECT * FROM Economie_client;
+
+-- pIEGE

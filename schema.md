@@ -16,7 +16,7 @@ Etape 1 :
         id_Plat_Carte
         id_Commande
         Quantite
-        prix unitaire
+        prix_unitaire
     Table Client_Commande :
         id_Client_Commande
         id_Commande
@@ -63,3 +63,13 @@ Etape 1 :
         id_Plat
         quantite
         id_ingredient
+    Table Menu :
+        id_Menu
+        libelle
+        prix
+    Table Menu_Plat :
+        id_Menu_Plat
+        id_Menu
+        id_Plat
+        quantite
+        
