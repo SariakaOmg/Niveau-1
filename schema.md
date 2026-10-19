@@ -50,3 +50,16 @@ Etape 1 :
         Montant
         Dates
         id_Plat
+    Table Ingredient :
+        id_ingredient
+        libelle
+        unite
+    Table Stock_Ingredient:
+        id_Stock_Ingredient
+        quantite_stock
+        id_ingredient
+    Table Composition_Plat:
+        id_Composition_Plat
+        id_Plat
+        quantite
+        id_ingredient

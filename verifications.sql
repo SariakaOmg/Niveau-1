@@ -130,4 +130,30 @@ GROUP BY id_Commande, dates;
 
 ALTER TABLE Commande_Plat ADD COLUMN prix_unitaire NUMERIC;
 
+-- Etape 8
+-- consommation théorique de chaque ingrédient pour la journée du 12 octobre
+WITH QntPlatDate_n AS (
+    SELECT 
+        Commande_Plat.id_Plat_Carte, 
+        Commande_Plat.quantite 
+    FROM Commande 
+    RIGHT JOIN Commande_Plat ON Commande.id_Commande = Commande_Plat.id_Commande 
+    WHERE Commande.dates = '2026-10-12'
+),
+QntPlatDate AS (
+    SELECT 
+        id_Plat_Carte, 
+        SUM(quantite) AS total_quantite  
+    FROM QntPlatDate_n 
+    GROUP BY id_Plat_Carte
+),
+Compo_plat AS (
+    SELECT Composition_Plat.id_ingredient ,QntPlatDate.id_Plat_Carte, (Composition_Plat.quantite * QntPlatDate.total_quantite) AS Totalqt  FROM Composition_Plat JOIN QntPlatDate ON Composition_Plat.id_Plat = QntPlatDate.id_Plat_Carte
+),
+Qte_par_Ingred AS(
+    SELECT id_ingredient, SUM(Totalqt) AS C_t FROM Compo_plat GROUP BY id_ingredient
+)
+SELECT Ingredient.libelle , Qte_par_Ingred.C_t FROM Ingredient JOIN Qte_par_Ingred ON Ingredient.id_ingredient = Qte_par_Ingred.id_ingredient ;
 
+-- piege
+-- parce que risque de faute de frappe peut faussee les donnee 
