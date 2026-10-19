@@ -4,7 +4,8 @@ CREATE TABLE Paiement(
     id_paiement SERIAL PRIMARY KEY,
     id_Commande INT NOT NULL,
     id_Mode_paiement INT,
-    Montant INT
+    Montant INT,
+    reference_transaction VARCHAR(10)
 );
 
 CREATE TABLE Mode_paiement(

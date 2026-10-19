@@ -40,6 +40,7 @@ Etape 1 :
         id_Commande
         id_Mode_paiement
         Montant
+        reference_transaction
     Table Mode_paiement:
         id_Mode_paiement
         Libelle

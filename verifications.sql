@@ -90,6 +90,8 @@ CalculReste AS (
 SELECT * 
 FROM CalculReste 
 WHERE reste != 0;
+
 -- piege
 -- Pourquoi une colonne montant_paye dans la table des commandes ne suffit-elle pas ?
 -- -> parce qu une commande peut y avoir plusieurs paiement
+
