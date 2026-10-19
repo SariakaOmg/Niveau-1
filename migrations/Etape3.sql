@@ -23,3 +23,5 @@ INSERT INTO Commande_Plat (id_Commande, id_Plat_Carte, Quantite) VALUES
 (1, 5, 1), -- 1 Mi sao pour la commande 2
 (1, 6, 2); -- 2 Mofo gasy pour la commande 2
 
+INSERT INTO Commande_Plat (id_Commande, id_Plat_Carte, Quantite) VALUES
+(2,2,1);

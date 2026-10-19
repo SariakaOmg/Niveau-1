@@ -42,7 +42,8 @@ SELECT Serveur.Nom, Serveur.Prenom,count(*)  FROM Serveur_Commande_Table RIGHT J
 SELECT 
     Serveur.Nom, 
     Serveur.Prenom, 
-    SUM(Plat_Carte.Prix_Plat_Ar) AS nombre_plats_pris
+    COALESCE(COUNT(Commande_Plat.id_Commande_Plat),0) AS Nombre_commande,
+    COALESCE(SUM((Plat_Carte.Prix_Plat_Ar)*(Commande_Plat.Quantite) ),0) AS nombre_plats_pris
 FROM Serveur_Commande_Table
 RIGHT JOIN Serveur ON Serveur.id_Serveur = Serveur_Commande_Table.id_Serveur
 LEFT JOIN Commande_Plat ON Commande_Plat.id_Commande = Serveur_Commande_Table.id_Commande
@@ -60,9 +61,9 @@ WITH MontantDu AS (
     -- 1. Calcul du total des plats commandés pour chaque commande
     SELECT 
         cp.id_Commande,
-        SUM(cp.Quantite * ca.Prix) AS montant_du
+        SUM(cp.Quantite * ca.Prix_Plat_Ar) AS montant_du
     FROM Commande_Plat cp
-    JOIN Carte ca ON cp.id_Plat_Carte = ca.Id_Plat
+    JOIN Plat_Carte ca ON cp.id_Plat_Carte = ca.id_Plat
     GROUP BY cp.id_Commande
 ),
 MontantPaye AS (
@@ -72,18 +73,23 @@ MontantPaye AS (
         SUM(Montant) AS montant_payer
     FROM Paiement
     GROUP BY id_Commande
+),
+CalculReste AS (
+    -- 3. Assemblage et calcul du reste
+    SELECT 
+        c.id_Commande,
+        c.dates AS date_commande,
+        COALESCE(md.montant_du, 0) AS montant_du,
+        COALESCE(mp.montant_payer, 0) AS montant_payer,
+        (COALESCE(md.montant_du, 0) - COALESCE(mp.montant_payer, 0)) AS reste
+    FROM Commande c
+    LEFT JOIN MontantDu md ON c.id_Commande = md.id_Commande
+    LEFT JOIN MontantPaye mp ON c.id_Commande = mp.id_Commande
 )
--- 3. Assemblage final et calcul du reste
-SELECT 
-    c.id_Commande,
-    c.dates AS date_commande,
-    COALESCE(md.montant_du, 0) AS montant_du,
-    COALESCE(mp.montant_payer, 0) AS montant_payer,
-    (COALESCE(md.montant_du, 0) - COALESCE(mp.montant_payer, 0)) AS reste
-FROM Commande c
-LEFT JOIN MontantDu md ON c.id_Commande = md.id_Commande
-LEFT JOIN MontantPaye mp ON c.id_Commande = mp.id_Commande;
-
+-- 4. Filtrage final sur les commandes non soldées
+SELECT * 
+FROM CalculReste 
+WHERE reste != 0;
 -- piege
 -- Pourquoi une colonne montant_paye dans la table des commandes ne suffit-elle pas ?
 -- -> parce qu une commande peut y avoir plusieurs paiement
