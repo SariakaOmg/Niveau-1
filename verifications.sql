@@ -42,7 +42,8 @@ SELECT Serveur.Nom, Serveur.Prenom,count(*)  FROM Serveur_Commande_Table RIGHT J
 SELECT 
     Serveur.Nom, 
     Serveur.Prenom, 
-    SUM(Plat_Carte.Prix_Plat_Ar) AS nombre_plats_pris
+    COALESCE(COUNT(Commande_Plat.id_Commande_Plat),0) AS Nombre_commande,
+    COALESCE(SUM((Plat_Carte.Prix_Plat_Ar)*(Commande_Plat.Quantite) ),0) AS nombre_plats_pris
 FROM Serveur_Commande_Table
 RIGHT JOIN Serveur ON Serveur.id_Serveur = Serveur_Commande_Table.id_Serveur
 LEFT JOIN Commande_Plat ON Commande_Plat.id_Commande = Serveur_Commande_Table.id_Commande
