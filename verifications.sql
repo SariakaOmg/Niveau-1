@@ -20,7 +20,7 @@ SELECT  Categorie_plat.nom_categorie , COUNT(*) as nombrePlat FROM Plat_Carte RI
 
 -- Etape 3 :
 -- montant total de chaque commande
-SELECT Commande.dates, SUM(Plat_Carte.Prix_Plat_Ar) 
+SELECT Commande.dates, SUM(Plat_Carte.Prix_Plat_Ar*Commande_Plat.Quantite) 
 FROM Plat_Carte 
 RIGHT JOIN Commande_Plat ON Plat_Carte.id_Plat = Commande_Plat.id_Plat_Carte 
 RIGHT JOIN Commande ON Commande.id_Commande = Commande_Plat.id_Commande 
